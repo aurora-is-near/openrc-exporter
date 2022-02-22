@@ -1,0 +1,21 @@
+groups:
+- name: OpenRC
+  rules:
+  - alert: OpenRCServiceFailed
+    expr: openrc_service_status{state=~"failed|crashed"} > 0
+    for: 5m
+    labels:
+      severity: critical
+      service: openrc
+    annotations:
+      summary: Service failed or crashed
+      description: "Service {{ $labels.service }} {{ $labels.state }}"
+  - alert: OpenRCServiceNotRunning
+    expr: openrc_service_status{service=~"nginx|znc",state="stopped"} > 0
+    for: 5m
+    labels:
+      severity: critical
+      service: openrc
+    annotations:
+      summary: Service not running
+      description: "Service {{ $labels.service }} is not running"

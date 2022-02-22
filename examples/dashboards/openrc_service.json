@@ -1,0 +1,560 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "gnetId": null,
+  "graphTooltip": 0,
+  "id": 4,
+  "iteration": 1619087629977,
+  "links": [],
+  "panels": [
+    {
+      "datasource": null,
+      "description": "The current runlevel",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 3,
+        "x": 0,
+        "y": 0
+      },
+      "id": 4,
+      "options": {
+        "content": "<h1><center>${current_runlevel}</center></h1>",
+        "mode": "html"
+      },
+      "pluginVersion": "7.3.5",
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Current runlevel",
+      "type": "text"
+    },
+    {
+      "datasource": null,
+      "description": "Services that are running",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 21,
+        "x": 3,
+        "y": 0
+      },
+      "id": 2,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "last"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "value_and_name"
+      },
+      "pluginVersion": "7.3.5",
+      "targets": [
+        {
+          "expr": "count(openrc_service_status{instance=\"$instance\",state=\"started\"} == 1) or vector(0)",
+          "instant": true,
+          "interval": "",
+          "legendFormat": "started",
+          "refId": "A"
+        },
+        {
+          "expr": "count(openrc_service_status{instance=\"$instance\",state=\"stopped\"} == 1) or vector(0)",
+          "instant": true,
+          "interval": "",
+          "legendFormat": "stopped",
+          "refId": "B"
+        },
+        {
+          "expr": "count(openrc_service_status{instance=\"$instance\",state=\"crashed\"} == 1) or vector(0)",
+          "instant": true,
+          "interval": "",
+          "legendFormat": "crashed",
+          "refId": "C"
+        },
+        {
+          "expr": "count(openrc_service_status{instance=\"$instance\",state=\"scheduled\"} == 1) or vector(0)",
+          "instant": true,
+          "interval": "",
+          "legendFormat": "scheduled",
+          "refId": "D"
+        },
+        {
+          "expr": "count(openrc_service_status{instance=\"$instance\",state=\"wasinactive\"} == 1) or vector(0)",
+          "instant": true,
+          "interval": "",
+          "legendFormat": "wasinactive",
+          "refId": "E"
+        },
+        {
+          "expr": "count(openrc_service_status{instance=\"$instance\",state=\"hotplugged\"} == 1) or vector(0)",
+          "instant": true,
+          "interval": "",
+          "legendFormat": "hotplugged",
+          "refId": "F"
+        },
+        {
+          "expr": "count(openrc_service_status{instance=\"$instance\",state=\"inactive\"} == 1) or vector(0)",
+          "instant": true,
+          "interval": "",
+          "legendFormat": "hotplugged",
+          "refId": "G"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Service status",
+      "type": "stat"
+    },
+    {
+      "datasource": null,
+      "description": "A service can be in multiple states.\n\nIt can only be in one of the following at a time:\n- stopped\n- started\n- stopping\n- starting\n- inactive\n\nIt may have been hotplugged:\n- hotplugged\n\nIt can optionally be in one of the following:\n- failed\n- scheduled\n- wasinactive\n- crashed",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": null,
+            "filterable": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 17,
+        "w": 7,
+        "x": 0,
+        "y": 5
+      },
+      "id": 8,
+      "options": {
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": false,
+            "displayName": "service"
+          }
+        ]
+      },
+      "pluginVersion": "7.3.5",
+      "targets": [
+        {
+          "expr": "(openrc_service_status{instance=\"$instance\"} == 1)",
+          "format": "table",
+          "instant": true,
+          "interval": "",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Service status",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "Value": true,
+              "__name__": true,
+              "instance": true,
+              "job": true
+            },
+            "indexByName": {},
+            "renameByName": {}
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": null,
+      "description": "**Deamon's crashed**\n\nIf not all daemons started by start-stop-daemon are running\n\n**Start count**\n\nHow many times the service has been started/restarted\n\n**Respawn delay**\n\nHow many seconds to wait before restarting a crashed service\n\n(supervise-daemon only)\n\n**Respawn max**\n\nMaximum number of times within respawn period that a service is restarted before giving up\n\n(supervise-daemon only)\n\n**Respawn period**\n\nSee Respawn max\n\n(supervise-daemon only)\n\n**Uptime**\n\nHow long the service has been running",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": null,
+            "filterable": true
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Uptime"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "s"
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "from": "",
+                    "id": 1,
+                    "text": "Unknown",
+                    "to": "",
+                    "type": 1,
+                    "value": "0"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Daemon's crashed"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "from": "",
+                    "id": 1,
+                    "text": "no",
+                    "to": "",
+                    "type": 1,
+                    "value": "0"
+                  },
+                  {
+                    "from": "",
+                    "id": 2,
+                    "text": "yes",
+                    "to": "",
+                    "type": 1,
+                    "value": "1"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Respawn delay (s)"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "s"
+              },
+              {
+                "id": "custom.width",
+                "value": null
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Respawn period (s)"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "s"
+              },
+              {
+                "id": "custom.width",
+                "value": 175
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 17,
+        "w": 17,
+        "x": 7,
+        "y": 5
+      },
+      "id": 6,
+      "options": {
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "Uptime"
+          }
+        ]
+      },
+      "pluginVersion": "7.3.5",
+      "targets": [
+        {
+          "expr": "openrc_service_uptime_seconds{instance=\"$instance\"}",
+          "format": "table",
+          "instant": true,
+          "interval": "",
+          "legendFormat": "",
+          "refId": "B"
+        },
+        {
+          "expr": "openrc_service_daemons_crashed{instance=\"$instance\"}",
+          "format": "table",
+          "instant": true,
+          "interval": "",
+          "legendFormat": "",
+          "refId": "C"
+        },
+        {
+          "expr": "openrc_service_respawn_delay_seconds{instance=\"$instance\"}",
+          "format": "table",
+          "instant": true,
+          "interval": "",
+          "legendFormat": "",
+          "refId": "D"
+        },
+        {
+          "expr": "openrc_service_respawn_max{instance=\"$instance\"}",
+          "format": "table",
+          "instant": true,
+          "interval": "",
+          "legendFormat": "",
+          "refId": "E"
+        },
+        {
+          "expr": "openrc_service_respawn_period_seconds{instance=\"$instance\"}",
+          "format": "table",
+          "instant": true,
+          "interval": "",
+          "legendFormat": "",
+          "refId": "F"
+        },
+        {
+          "expr": "openrc_service_start_count{instance=\"$instance\"}",
+          "format": "table",
+          "instant": true,
+          "interval": "",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Services details",
+      "transformations": [
+        {
+          "id": "seriesToColumns",
+          "options": {
+            "byField": "service"
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time 1": true,
+              "Time 2": true,
+              "Time 3": true,
+              "Time 4": true,
+              "Time 5": true,
+              "Time 6": true,
+              "Value #A": false,
+              "__name__ 1": true,
+              "__name__ 2": true,
+              "__name__ 3": true,
+              "__name__ 4": true,
+              "__name__ 5": true,
+              "__name__ 6": true,
+              "instance 1": true,
+              "instance 2": true,
+              "instance 3": true,
+              "instance 4": true,
+              "instance 5": true,
+              "instance 6": true,
+              "job 1": true,
+              "job 2": true,
+              "job 3": true,
+              "job 4": true,
+              "job 5": true,
+              "job 6": true
+            },
+            "indexByName": {
+              "Time 1": 8,
+              "Time 2": 12,
+              "Time 3": 15,
+              "Time 4": 19,
+              "Time 5": 23,
+              "Time 6": 27,
+              "Value #A": 2,
+              "Value #B": 6,
+              "Value #C": 1,
+              "Value #D": 3,
+              "Value #E": 4,
+              "Value #F": 5,
+              "__name__ 1": 9,
+              "__name__ 2": 13,
+              "__name__ 3": 16,
+              "__name__ 4": 20,
+              "__name__ 5": 24,
+              "__name__ 6": 28,
+              "instance 1": 10,
+              "instance 2": 14,
+              "instance 3": 17,
+              "instance 4": 21,
+              "instance 5": 25,
+              "instance 6": 29,
+              "job 1": 11,
+              "job 2": 7,
+              "job 3": 18,
+              "job 4": 22,
+              "job 5": 26,
+              "job 6": 30,
+              "service": 0
+            },
+            "renameByName": {
+              "Value #A": "Start count",
+              "Value #B": "Uptime",
+              "Value #C": "Daemon's crashed",
+              "Value #D": "Respawn delay (s)",
+              "Value #E": "Respawn max",
+              "Value #F": "Respawn period (s)",
+              "service": "Service",
+              "state": "State"
+            }
+          }
+        }
+      ],
+      "type": "table"
+    }
+  ],
+  "schemaVersion": 26,
+  "style": "dark",
+  "tags": [
+    "openrc"
+  ],
+  "templating": {
+    "list": [
+      {
+        "allValue": null,
+        "current": { },
+        "datasource": "Prometheus",
+        "definition": "label_values(openrc_service_status, instance)",
+        "error": null,
+        "hide": 0,
+        "includeAll": false,
+        "label": "Instance",
+        "multi": false,
+        "name": "instance",
+        "options": [],
+        "query": "label_values(openrc_service_status, instance)",
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "allValue": null,
+        "current": {
+          "selected": false,
+          "text": "default",
+          "value": "default"
+        },
+        "datasource": "Prometheus",
+        "definition": "label_values(openrc_runlevel_current{instance=\"$instance\"}, runlevel)",
+        "error": null,
+        "hide": 2,
+        "includeAll": false,
+        "label": null,
+        "multi": false,
+        "name": "current_runlevel",
+        "options": [],
+        "query": "label_values(openrc_runlevel_current{instance=\"$instance\"}, runlevel)",
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      }
+    ]
+  },
+  "time": {
+    "from": "now-5m",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "OpenRC Services",
+  "uid": "kmZcsEXMz",
+  "version": 6
+}
